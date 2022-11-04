@@ -9,9 +9,12 @@ import dotenv from "dotenv";
 import corsOptions from "./config/corsOptions";
 import typeDefs from "./graphql/typedefs";
 import resolvers from "./graphql/resolvers";
+import mongoose from "mongoose";
+import connectDB from "./config/dbConnection";
 
 async function startApolloServer() {
   dotenv.config();
+  connectDB();
   const PORT = process.env.PORT || 5000;
   const app = express();
   const httpServer = http.createServer(app);
@@ -27,12 +30,19 @@ async function startApolloServer() {
   });
   await server.start();
   server.applyMiddleware({ app, cors: corsOptions });
-  await new Promise<void>((resolve) =>
-    httpServer.listen({ port: PORT }, resolve)
-  );
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  mongoose.connection.once("open", () => {
+    console.log("MongoDB connected");
+    httpServer.listen({ port: PORT }, () => {
+      console.log(
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+      );
+    });
+  });
+  mongoose.connection.on("error", (err: any) => {
+    console.log(err?.message);
+  });
 }
 
 startApolloServer().catch((err: any) => {
-  console.log(err);
+  console.log(err?.message);
 });
