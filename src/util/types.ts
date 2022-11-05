@@ -1,4 +1,4 @@
-import { PrismaClient, MODE_OF_CONTACT, GENDER } from "@prisma/client";
+import { PrismaClient, MODE_OF_CONTACT, GENDER, User } from "@prisma/client";
 
 // server
 export interface GraphQLContext {
@@ -16,4 +16,12 @@ export interface CreateUserInput {
   dateOfBirth: Date;
   educationBackground: string;
   modeOfContact: MODE_OF_CONTACT;
+}
+
+// resolvers
+
+export interface GetUsersData {
+  users: User[];
+  totalUsers: number;
+  limit: number;
 }

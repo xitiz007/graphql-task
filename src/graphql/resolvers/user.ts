@@ -1,4 +1,8 @@
-import { GraphQLContext, CreateUserInput } from "../../util/types";
+import {
+  GraphQLContext,
+  CreateUserInput,
+  GetUsersData,
+} from "../../util/types";
 import { User } from "@prisma/client";
 
 const userResolvers = {
@@ -24,14 +28,25 @@ const userResolvers = {
     },
     getUsers: async (
       _: any,
-      __: any,
+      args: { page: number },
       context: GraphQLContext
-    ): Promise<User[]> => {
+    ): Promise<GetUsersData> => {
       try {
         const { prisma } = context;
-        const users = await prisma.user.findMany();
-        
-        return users;
+        // offset pagination
+        const page = args.page === 0 ? 1 : args.page;
+        const take = 2;
+        const skip = (page - 1) * take;
+        const totalUsers = await prisma.user.count();
+        const users = await prisma.user.findMany({
+          skip,
+          take,
+        });
+        return {
+          limit: take,
+          totalUsers,
+          users,
+        };
       } catch (err: any) {
         throw new Error(err?.message);
       }
