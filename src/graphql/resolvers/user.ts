@@ -30,6 +30,7 @@ const userResolvers = {
       try {
         const { prisma } = context;
         const users = await prisma.user.findMany();
+        
         return users;
       } catch (err: any) {
         throw new Error(err?.message);

@@ -27,5 +27,8 @@
     "@types/node": "^18.11.9",
     "nodemon": "^2.0.20",
     "prisma": "^4.5.0"
-  }
+  },
+  "prisma": {
+  "schema": "src/prisma/schema.prisma"
+}
 }
