@@ -2,8 +2,10 @@ import {
   GraphQLContext,
   CreateUserInput,
   GetUsersData,
-} from "../../util/types";
+} from "../../utils/types";
 import { User } from "@prisma/client";
+import { UserInputError } from "apollo-server-core";
+import validateCreateUser from "../../validation/formValidation";
 
 const userResolvers = {
   Query: {
@@ -60,10 +62,17 @@ const userResolvers = {
     ): Promise<User> => {
       const { userInput } = args;
       const { prisma } = context;
+      // form validation
+      const errors = validateCreateUser(userInput);
+      if (errors.length)
+        throw new UserInputError("form validation error", {
+          validationErrors: errors,
+        });
       try {
         const newUser = await prisma.user.create({
           data: {
             ...userInput,
+            email: userInput.email.toLowerCase(),
           },
         });
         return newUser;

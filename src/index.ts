@@ -10,7 +10,7 @@ import corsOptions from "./config/corsOptions";
 import typeDefs from "./graphql/typedefs";
 import resolvers from "./graphql/resolvers";
 import { PrismaClient } from "@prisma/client";
-import { GraphQLContext } from "./util/types";
+import { GraphQLContext } from "./utils/types";
 
 async function startApolloServer() {
   dotenv.config();
@@ -21,7 +21,7 @@ async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async (): Promise<GraphQLContext> => {
+    context: (): GraphQLContext => {
       return {
         prisma,
       };

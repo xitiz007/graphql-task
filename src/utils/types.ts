@@ -13,13 +13,12 @@ export interface CreateUserInput {
   email: string;
   address: string;
   nationality: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   educationBackground: string;
   modeOfContact: MODE_OF_CONTACT;
 }
 
 // resolvers
-
 export interface GetUsersData {
   users: User[];
   totalUsers: number;

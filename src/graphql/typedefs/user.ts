@@ -32,14 +32,14 @@ const userTypeDefs = `#graphql
         educationBackground: String!
         modeOfContact: Contact
     }
-    type GetUsers {
+    type GetUsersPayload {
         users: [User]
         totalUsers: Int
         limit: Int
     }
     type Query {
         getUser(id: ID!): User
-        getUsers(page: Int!): GetUsers
+        getUsers(page: Int!): GetUsersPayload
     }
     type Mutation {
         createUser(userInput: UserInput!): User
